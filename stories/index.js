@@ -50,6 +50,16 @@ storiesOf("Button", module)
       name: "Wednesday",
       spots: 0,
     },
+    {
+      id: 4,
+      name: "Thursday",
+      spots: 4,
+    },
+    {
+      id: 5,
+      name: "Friday",
+      spots: 3,
+    },
   ];
 
   storiesOf('DayList', module)

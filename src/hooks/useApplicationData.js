@@ -5,14 +5,31 @@ export default function useApplicationData() {
 
   const reducer = function(state, action) {
     const reducers = {
-      day(state, action) {
-        return {...state, day: action.value}
+      day(state, {day}) {
+        return {...state, day}
       },
-      application(state, action) {
-        return {...state, days: action.all[0].data, appointments: action.all[1].data, interviewers: action.all[2].data}
+      application(state, {days, appointments, interviewers}) {
+        return {...state, days, appointments, interviewers}
       },
-      appointment(state, action) {
-        return {...state, appointments: action.appointments, days: action.days}
+      interview(state, {id, interview}) {
+        const appointment = {
+          ...state.appointments[id],
+          interview
+        };
+    
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment
+        };
+    
+        const days = [...state.days];
+    
+        for (let i = 0; i < days.length; i++) {
+          if (days[i].appointments.includes(id)) {
+            days[i] = {...days[i], spots: days[i].spots + (interview ? -1 : 1)}
+          }
+        }
+        return {...state, appointments, days}
       }
     }
 
@@ -26,54 +43,21 @@ export default function useApplicationData() {
     interviewers: {},
   });
 
-  const setDay = day => dispatch({ type: 'day', value: day });
+  const setDay = day => dispatch({ type: 'day', day });
 
   const bookInterview = function(id, interview) {
     const appointment = {
       ...state.appointments[id],
-      interview: {...interview}
+      interview
     };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    const days = [...state.days];
-
-    for (let i = 0; i < state.days.length; i++) {
-      if (state.days[i].appointments.includes(id)) {
-        const day = {...state.days[i], spots: state.days[i].spots - 1}
-        days[i] = day;
-      }
-    }
-
+    
     return axios.put(`api/appointments/${id}`, appointment)
-      .then(() => dispatch({type: 'appointment', appointments, days}));
+      .then(() => dispatch({type: 'interview', id, interview}));
   }
 
   const cancelInterview = function(id) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    }
-
-    const days = [...state.days];
-
-    for (let i = 0; i < state.days.length; i++) {
-      if (state.days[i].appointments.includes(id)) {
-        const day = {...state.days[i], spots: state.days[i].spots + 1}
-        days[i] = day;
-      }
-    }
-
     return axios.delete(`api/appointments/${id}`)
-      .then(() => dispatch({type: 'appointment', appointments, days}));
+      .then(() => dispatch({type: 'interview', id, interview: null}));
   }
 
   useEffect(() => {
@@ -83,7 +67,8 @@ export default function useApplicationData() {
       axios.get('api/interviewers')
     ])
     .then(all => {
-      dispatch({type: 'application', all})
+      const [days, appointments, interviewers] = all.map((result) => result.data)
+      dispatch({type: 'application', days, appointments, interviewers})
     })
   }, [])
 

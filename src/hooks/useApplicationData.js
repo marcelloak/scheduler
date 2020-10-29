@@ -1,16 +1,32 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useReducer } from 'react'
 import axios from 'axios';
 
 export default function useApplicationData() {
 
-  const [state, setState] = useState({
+  const reducer = function(state, action) {
+    const reducers = {
+      day(state, action) {
+        return {...state, day: action.value}
+      },
+      application(state, action) {
+        return {...state, days: action.all[0].data, appointments: action.all[1].data, interviewers: action.all[2].data}
+      },
+      appointment(state, action) {
+        return {...state, appointments: action.appointments, days: action.days}
+      }
+    }
+
+    return reducers[action.type](state, action) || state;
+  }
+
+  const [state, dispatch] = useReducer(reducer, {
     day: 'Monday',
     days: [],
     appointments: {},
     interviewers: {},
   });
 
-  const setDay = day => setState({ ...state, day });
+  const setDay = day => dispatch({ type: 'day', value: day });
 
   const bookInterview = function(id, interview) {
     const appointment = {
@@ -23,13 +39,17 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
+    const days = [...state.days];
+
+    for (let i = 0; i < state.days.length; i++) {
+      if (state.days[i].appointments.includes(id)) {
+        const day = {...state.days[i], spots: state.days[i].spots - 1}
+        days[i] = day;
+      }
+    }
+
     return axios.put(`api/appointments/${id}`, appointment)
-      .then(() => {
-        setState({
-          ...state,
-          appointments
-        });
-      });
+      .then(() => dispatch({type: 'appointment', appointments, days}));
   }
 
   const cancelInterview = function(id) {
@@ -42,13 +62,18 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     }
+
+    const days = [...state.days];
+
+    for (let i = 0; i < state.days.length; i++) {
+      if (state.days[i].appointments.includes(id)) {
+        const day = {...state.days[i], spots: state.days[i].spots + 1}
+        days[i] = day;
+      }
+    }
+
     return axios.delete(`api/appointments/${id}`)
-      .then(() => {
-        setState({
-          ...state,
-          appointments
-        })
-      });
+      .then(() => dispatch({type: 'appointment', appointments, days}));
   }
 
   useEffect(() => {
@@ -58,7 +83,7 @@ export default function useApplicationData() {
       axios.get('api/interviewers')
     ])
     .then(all => {
-      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}))
+      dispatch({type: 'application', all})
     })
   }, [])
 

@@ -5,6 +5,7 @@ import Empty from './Empty'
 import Form from './Form'
 import Status from './Status'
 import Confirm from './Confirm'
+import Error from './Error'
 
 import useVisualMode from '../../hooks/useVisualMode';
 
@@ -17,6 +18,8 @@ const SAVING = "SAVING";
 const DELETING = "DELETING";
 const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY)
@@ -30,16 +33,14 @@ export default function Appointment(props) {
     transition(SAVING)
     props.bookInterview(props.id, interview)
       .then(() => transition(SHOW))
+      .catch(() => transition(ERROR_SAVE, true))
   }
 
-  const confirmDelete = function() {
-    transition(CONFIRM)
-  }
-
-  const remove = function() {
-    transition(DELETING)
+  const destroy = function() {
+    transition(DELETING, true)
     props.cancelInterview(props.id)
       .then(() => transition(EMPTY))
+      .catch(() => transition(ERROR_DELETE, true))
   }
 
   return (
@@ -50,14 +51,14 @@ export default function Appointment(props) {
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
-          onDelete={confirmDelete}
+          onDelete={() => transition(CONFIRM)}
           onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CREATE && <Form interviewers={props.interviewers} onCancel={back} onSave={save} />}
       {mode === SAVING && <Status message='Saving' />}
       {mode === DELETING && <Status message='Deleting' />}
-      {mode === CONFIRM && <Confirm message='Are you sure you would like to delete?' onCancel={back} onConfirm={remove} />}
+      {mode === CONFIRM && <Confirm message='Are you sure you would like to delete?' onCancel={back} onConfirm={destroy} />}
       {mode === EDIT && (
         <Form
           name={props.interview.student}
@@ -67,6 +68,8 @@ export default function Appointment(props) {
           onSave={save}
         />
       )}
+      {mode === ERROR_SAVE && <Error message='Error encountered during save' onClose={back} />}
+      {mode === ERROR_DELETE && <Error message='Error encountered during delete' onClose={back} />}
     </article>
   );
 }

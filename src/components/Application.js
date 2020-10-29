@@ -39,7 +39,7 @@ export default function Application(props) {
           ...state,
           appointments
         });
-      })
+      });
   }
 
   const cancelInterview = function(id) {

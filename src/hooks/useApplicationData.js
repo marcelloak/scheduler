@@ -3,6 +3,18 @@ import axios from 'axios';
 
 export default function useApplicationData() {
 
+  useEffect(() => {
+    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+    webSocket.onmessage = (event) => {
+      const { type, id, interview } = JSON.parse(event.data);
+      if (type === 'SET_INTERVIEW') dispatch({type: 'interview', id, interview})
+    };
+
+    return () => {webSocket.close()}
+  }, []);
+
+
   const reducer = function(state, action) {
     const reducers = {
       day(state, {day}) {
@@ -20,7 +32,7 @@ export default function useApplicationData() {
         const appointments = {
           ...state.appointments,
           [id]: appointment
-        };
+        }; 
     
         const days = [...state.days];
     
@@ -51,13 +63,11 @@ export default function useApplicationData() {
       interview
     };
     
-    return axios.put(`api/appointments/${id}`, appointment)
-      .then(() => dispatch({type: 'interview', id, interview}));
+    return axios.put(`api/appointments/${id}`, appointment);
   }
 
   const cancelInterview = function(id) {
-    return axios.delete(`api/appointments/${id}`)
-      .then(() => dispatch({type: 'interview', id, interview: null}));
+    return axios.delete(`api/appointments/${id}`);
   }
 
   useEffect(() => {

@@ -63,18 +63,18 @@ export default function useApplicationData() {
       interview
     };
     
-    return axios.put(`api/appointments/${id}`, appointment);
+    return axios.put(`/api/appointments/${id}`, appointment);
   }
 
   const cancelInterview = function(id) {
-    return axios.delete(`api/appointments/${id}`);
+    return axios.delete(`/api/appointments/${id}`);
   }
 
   useEffect(() => {
     Promise.all([
-      axios.get('api/days'),
-      axios.get('api/appointments'),
-      axios.get('api/interviewers')
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers')
     ])
     .then(all => {
       const [days, appointments, interviewers] = all.map((result) => result.data)

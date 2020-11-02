@@ -1,4 +1,5 @@
 import React from 'react';
+import propTypes from 'prop-types';
 
 import InterviewerListItem from './InterviewerListItem'
 
@@ -14,6 +15,10 @@ export default function InterviewerList(props) {
       onChange={() => props.onChange(interviewer.id)}  
     />
   });
+
+  InterviewerList.propTypes = {
+    interviewers: propTypes.array.isRequired
+  };
 
   return (
     <section className='interviewers'>

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from 'axios';
+import WS from "jest-websocket-mock";
 
 import { render, cleanup, waitForElement, waitForElementToBeRemoved, fireEvent, getByText, queryByText, getByPlaceholderText, getAllByTestId, getByAltText } from "@testing-library/react";
 
@@ -17,6 +18,7 @@ describe('Application', () => {
   });
 
   it("loads data, books an interview and reduces the spots remaining for the first day by 1", async () => {
+    const server = new WS("ws://localhost:8001");
     const { container } = render(<Application />);
 
     await waitForElement(() => getByText(container, "Archie Cohen"));
@@ -31,14 +33,16 @@ describe('Application', () => {
     expect(getByText(appointment, 'Saving')).toBeInTheDocument();
     
     await waitForElementToBeRemoved(() => getByText(container, 'Saving'));
-    // expect(getByText(container, 'Lydia Miller-Jones', {exact: false})).toBeInTheDocument();    If uncommented test fails because webSockets are implemented
+    server.send(`{"type":"SET_INTERVIEW","id":1,"interview":{"student":"Lydia Miller-Jones","interviewer":1}}`);
+    expect(getByText(container, 'Lydia Miller-Jones', {exact: false})).toBeInTheDocument();
 
     const day = getAllByTestId(container, 'day').find(day => queryByText(day, "Monday"));
-    expect(getByText(day, '1 spot remaining')).toBeInTheDocument();
-    // expect(getByText(day, 'no spots remaining')).toBeInTheDocument();    If uncommented test fails because webSockets are implemented
+    expect(getByText(day, 'no spots remaining')).toBeInTheDocument();
+    server.close();
   });
 
   it("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
+    const server = new WS("ws://localhost:8001");
     // 1. Render the Application.
     const { container } = render(<Application />);
   
@@ -60,15 +64,17 @@ describe('Application', () => {
     
     // 7. Wait until the element with the "Add" button is displayed.
     await waitForElementToBeRemoved(() => getByText(appointment, 'Deleting'));
-    // expect(getByAltText(appointment, 'Add')).toBeInTheDocument();    If uncommented test fails because webSockets are implemented
+    server.send(`{"type":"SET_INTERVIEW","id":2,"interview":null}`);
+    expect(getByAltText(appointment, 'Add')).toBeInTheDocument();
     
     // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
     const day = getAllByTestId(container, 'day').find(day => queryByText(day, "Monday"));
-    expect(getByText(day, '1 spot remaining')).toBeInTheDocument();
-    // expect(getByText(day, '2 spots remaining')).toBeInTheDocument();    If uncommented test fails because webSockets are implemented
+    expect(getByText(day, '2 spots remaining')).toBeInTheDocument();
+    server.close();
   });
 
   it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
+    const server = new WS("ws://localhost:8001");
     // 1. Render the Application.
     const { container } = render(<Application />);
   
@@ -95,11 +101,13 @@ describe('Application', () => {
     
     // 8. Wait until the element with the "Edit" button is displayed.
     await waitForElementToBeRemoved(() => getByText(appointment, 'Saving'));
-    // expect(getByAltText(appointment, 'Edit')).toBeInTheDocument();    If uncommented test fails because webSockets are implemented
+    server.send(`{"type":"SET_INTERVIEW","id":2,"interview":{"student":"Lydia Miller-Jones","interviewer":2}}`);
+    expect(getByAltText(appointment, 'Edit')).toBeInTheDocument();
     
     // 9. Check that the DayListItem with the text "Monday" also has the text "1 spots remaining".
     const day = getAllByTestId(container, 'day').find(day => queryByText(day, "Monday"));
     expect(getByText(day, '1 spot remaining')).toBeInTheDocument();
+    server.close();
   });
 
   it("shows the save error when failing to save an appointment", async () => {

@@ -1,6 +1,8 @@
 import { useEffect, useReducer } from 'react'
 import axios from 'axios';
 
+import reducer from 'reducers/application'
+
 export default function useApplicationData() {
 
   useEffect(() => {
@@ -13,40 +15,6 @@ export default function useApplicationData() {
 
     return () => {webSocket.close()}
   }, []);
-
-
-  const reducer = function(state, action) {
-    const reducers = {
-      day(state, {day}) {
-        return {...state, day}
-      },
-      application(state, {days, appointments, interviewers}) {
-        return {...state, days, appointments, interviewers}
-      },
-      interview(state, {id, interview}) {
-        const appointment = {
-          ...state.appointments[id],
-          interview
-        };
-    
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        }; 
-    
-        const days = [...state.days];
-    
-        for (let i = 0; i < days.length; i++) {
-          if (days[i].appointments.includes(id)) {
-            days[i] = {...days[i], spots: days[i].spots + (interview ? -1 : 1)}
-          }
-        }
-        return {...state, appointments, days}
-      }
-    }
-
-    return reducers[action.type](state, action) || state;
-  }
 
   const [state, dispatch] = useReducer(reducer, {
     day: 'Monday',

@@ -9,8 +9,8 @@ export default function useApplicationData() {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
     webSocket.onmessage = (event) => {
-      const { type, id, interview } = JSON.parse(event.data);
-      if (type === 'SET_INTERVIEW') dispatch({type: 'interview', id, interview})
+      const { id, interview } = JSON.parse(event.data);
+      dispatch({type: 'interview', id, interview})
     };
 
     return () => {webSocket.close()}

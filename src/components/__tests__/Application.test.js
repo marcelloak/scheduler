@@ -131,8 +131,8 @@ describe('Application', () => {
       target: { value: "Lydia Miller-Jones" }
     });
 
-    // 6. Click the "Save" button on that same appointment.
-    fireEvent.click(getByText(appointment, 'Save'));
+    // 6. Submit that same appointment.
+    fireEvent.submit(getByPlaceholderText(appointment, /enter student name/i));
 
     // 7. Check that the element with the text "Saving" is displayed.
     expect(getByText(appointment, 'Saving')).toBeInTheDocument();

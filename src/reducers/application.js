@@ -1,5 +1,8 @@
 export default function reducer(state, action) {
   const reducers = {
+    day(state, {day}) {
+      return {...state, day}
+    },
     application(state, {days, appointments, interviewers}) {
       return {...state, days, appointments, interviewers}
     },

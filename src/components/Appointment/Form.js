@@ -11,17 +11,17 @@ export default function Form(props) {
   const reset = function () {
     setName('');
     setInterviewer(null);
-  }
+  };
 
   const cancel = function () {
     reset();
     props.onCancel();
-  }
+  };
 
   const submit = function(event) {
     event.preventDefault();
     validate();
-  }
+  };
 
   // Validates that the name is not blank
   // Sets error if name is blank and otherwise saves the form 
@@ -34,7 +34,7 @@ export default function Form(props) {
     setError('');
 
     props.onSave(name, interviewer);
-  }
+  };
 
   return (
     <main className='appointment__card appointment__card--create'>
@@ -65,4 +65,4 @@ export default function Form(props) {
       </section>
     </main>
   );
-}
+};

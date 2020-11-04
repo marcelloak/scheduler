@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import 'components/InterviewerListItem.scss'
+import 'components/InterviewerListItem.scss';
 
 export default function InterviewerListItem(props) {
   const interviewerListItemClass = classNames('interviewers__item', {
@@ -24,4 +24,4 @@ export default function InterviewerListItem(props) {
       {props.selected ? props.name : ''}
     </li>
   );
-}
+};

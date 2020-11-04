@@ -13,7 +13,7 @@ export default function Application() {
 
   const {state, setDay, bookInterview, cancelInterview} = useApplicationData();
 
-  const interviewers = getInterviewersForDay(state, state.day)
+  const interviewers = getInterviewersForDay(state, state.day);
   const appointments = getAppointmentsForDay(state, state.day).map(
     appointment => {
       return (
@@ -28,7 +28,7 @@ export default function Application() {
         />
       );
     }
-  )
+  );
 
   return (
     <main className="layout">
@@ -54,4 +54,4 @@ export default function Application() {
       </section>
     </main>
   );
-}
+};

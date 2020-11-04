@@ -1,12 +1,11 @@
 export default function reducer(state, action) {
-
   // Creates reducers to change currently visible day, appointment data, or all local data
   const reducers = {
     day(state, {day}) {
-      return {...state, day}
+      return {...state, day};
     },
     application(state, {days, appointments, interviewers}) {
-      return {...state, days, appointments, interviewers}
+      return {...state, days, appointments, interviewers};
     },
     interview(state, {id, interview}) {
       const appointment = {
@@ -30,9 +29,9 @@ export default function reducer(state, action) {
           days[i] = {...days[i], spots: days[i].spots + spots}
         }
       }
-      return {...state, appointments, days}
+      return {...state, appointments, days};
     }
-  }
+  };
 
   return reducers[action.type](state, action);
-}
+};

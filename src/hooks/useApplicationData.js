@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import axios from 'axios';
 
-import reducer from 'reducers/application'
+import reducer from 'reducers/application';
 
 export default function useApplicationData() {
 
@@ -11,7 +11,7 @@ export default function useApplicationData() {
 
     webSocket.onmessage = (event) => {
       const { id, interview } = JSON.parse(event.data);
-      dispatch({type: 'interview', id, interview})
+      dispatch({type: 'interview', id, interview});
     };
 
     return () => {webSocket.close()}
@@ -35,12 +35,12 @@ export default function useApplicationData() {
     };
     
     return axios.put(`/api/appointments/${id}`, appointment);
-  }
+  };
 
   // Deletes an interview with the given id
   const cancelInterview = function(id) {
     return axios.delete(`/api/appointments/${id}`);
-  }
+  };
 
   // Gets all days, appointments and interviews from the DB API at launch then configures local data
   useEffect(() => {
@@ -50,10 +50,10 @@ export default function useApplicationData() {
       axios.get('/api/interviewers')
     ])
     .then(all => {
-      const [days, appointments, interviewers] = all.map((result) => result.data)
-      dispatch({type: 'application', days, appointments, interviewers})
+      const [days, appointments, interviewers] = all.map((result) => result.data);
+      dispatch({type: 'application', days, appointments, interviewers});
     })
-  }, [])
+  }, []);
 
-  return {state, setDay, bookInterview, cancelInterview }
-}
+  return { state, setDay, bookInterview, cancelInterview };
+};

@@ -157,7 +157,6 @@ describe('Application', () => {
 
     // 10. Check that the form is shown.
     expect(getByText(appointment, 'Save')).toBeInTheDocument();
-
   });
 
   it("shows the delete error when failing to delete an appointment", async () => {
@@ -190,5 +189,4 @@ describe('Application', () => {
     // 9. Check that the text "Archie Cohen" is displayed.
     expect(getByText(appointment, 'Archie Cohen')).toBeInTheDocument();
   });
-
 });

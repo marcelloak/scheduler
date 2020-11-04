@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import Header from './Header'
-import Show from './Show'
-import Empty from './Empty'
-import Form from './Form'
-import Status from './Status'
-import Confirm from './Confirm'
-import Error from './Error'
+import Header from './Header';
+import Show from './Show';
+import Empty from './Empty';
+import Form from './Form';
+import Status from './Status';
+import Confirm from './Confirm';
+import Error from './Error';
 
 import useVisualMode from '../../hooks/useVisualMode';
 
-import 'components/Appointment/styles.scss'
+import 'components/Appointment/styles.scss';
 
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
@@ -22,28 +22,28 @@ const ERROR_SAVE = "ERROR_SAVE";
 const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
-  const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY)
+  const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
   // Saves an appointment
   const save = function(name, interviewer) {
     const interview = {
       student: name,
       interviewer,
-    }
+    };
 
-    transition(SAVING)
+    transition(SAVING);
     props.bookInterview(props.id, interview)
       .then(() => transition(SHOW))
-      .catch(() => transition(ERROR_SAVE, true))
-  }
+      .catch(() => transition(ERROR_SAVE, true));
+  };
 
   // Cancels an appointment
   const destroy = function() {
-    transition(DELETING, true)
+    transition(DELETING, true);
     props.cancelInterview(props.id)
       .then(() => transition(EMPTY))
-      .catch(() => transition(ERROR_DELETE, true))
-  }
+      .catch(() => transition(ERROR_DELETE, true));
+  };
 
   // Transitions appoinment mode if added or deleted by another user
   useEffect(() => {
@@ -80,4 +80,4 @@ export default function Appointment(props) {
       {mode === ERROR_DELETE && <Error message='Error encountered during delete' onClose={back} />}
     </article>
   );
-}
+};

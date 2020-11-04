@@ -2,7 +2,7 @@ describe("Appoinments", () => {
 
   beforeEach(() => {
     // reset test database
-    cy.request('GET', 'localhost:8001/api/debug/reset')
+    cy.request('GET', 'localhost:8001/api/debug/reset');
     cy.visit("/");
     cy.contains('Monday');
   })

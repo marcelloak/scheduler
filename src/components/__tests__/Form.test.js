@@ -14,7 +14,7 @@ describe('Form', () => {
       name: 'Silvia Palmer',
       avatar: "https://i.imgur.com/LpaY82x.png",
     }
-  ]
+  ];
 
   it("renders without student name if not provided", () => {
     const { getByPlaceholderText } = render(<Form interviewers={interviewers} />);
@@ -93,6 +93,5 @@ describe('Form', () => {
     expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
-  
 });
 

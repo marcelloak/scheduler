@@ -5,13 +5,13 @@ export function getAppointmentsForDay(state, day) {
   for (const stateDay of state.days) {
     if (stateDay.name === day) {
       for (const id of stateDay.appointments) {
-        appointments.push(state.appointments[id])
+        appointments.push(state.appointments[id]);
       }
     }
   }
 
   return appointments;
-}
+};
 
 // Returns the interviewers from the given state that belong to the given day
 export function getInterviewersForDay(state, day) {
@@ -20,13 +20,13 @@ export function getInterviewersForDay(state, day) {
   for (const stateDay of state.days) {
     if (stateDay.name === day) {
       for (const id of stateDay.interviewers) {
-        interviewers.push(state.interviewers[id])
+        interviewers.push(state.interviewers[id]);
       }
     }
   }
 
   return interviewers;
-}
+};
 
 // Returns the appointments from the given state that has the given id
 export function getInterview(state, interview) {
@@ -40,4 +40,4 @@ export function getInterview(state, interview) {
   }
 
   return interviewInfo;
-}
+};

@@ -1,23 +1,34 @@
 # Interview Scheduler
 
-## Setup
+Currently available on [netlify](https://interview-scheduler-mk.netlify.app/)
 
-Install dependencies with `npm install`.
+Interview Scheduler is a simple, single-page interview scheduler that allows users to enter their name and interviewer into a time slot.
 
-## Running Webpack Development Server
+## Features
+- View all appointments for the week, by day, with spots remaining for each day
+- Add, edit or cancel appointments
+- Allows multiple users to interact, updating the view for all when a change is made 
 
-```sh
-npm start
-```
+## Final Product
 
-## Running Jest Test Framework
+!["Screenshot of base page"](https://github.com/marcelloak/scheduler/blob/master/docs/base-page.png)
+Screenshot of base page
+!["Screenshot of creating appointment"](https://github.com/marcelloak/scheduler/blob/master/docs/creating-appointment.png)
+Screenshot of creating appointment
+!["Screenshot of deleting appointment"](https://github.com/marcelloak/scheduler/blob/master/docs/deleting-appointment.png)
+Screenshot of deleting appointment
 
-```sh
-npm test
-```
+## Dependencies
 
-## Running Storybook Visual Testbed
+- axios
+- classnames
+- normalize.css
+- react
+- react-dom
+- react-scripts
 
-```sh
-npm run storybook
-```
+## Getting Started
+
+- Install all dependencies (using the `npm install` command).
+- Run the webpack development server using the `npm start` command.
+- Access the server from your [local host](http://localhost:8000).

@@ -56,6 +56,7 @@ const fixtures = {
 export default {
   get: jest.fn(url => {
     if (url === "/api/days") {
+      /* Resolve days data */
       return Promise.resolve({
         status: 200,
         statusText: "OK",
@@ -83,6 +84,7 @@ export default {
   }),
 
   put: jest.fn(() => {
+    /* Resolve editing appointment data */
     return Promise.resolve({
       status: 204,
       statusText: 'No Content',
@@ -90,6 +92,7 @@ export default {
   }),
 
   delete: jest.fn(() => {
+    /* Resolve deleting appointment data */
     return Promise.resolve({
       status: 204,
       statusText: 'No Content',

@@ -27,43 +27,48 @@ describe('Form', () => {
   });
 
   it("validates that the student name is not blank", () => {
+    // 1. Render the Form
     const onSave = jest.fn();
     const { getByText } = render(<Form onSave={onSave} interviewers={interviewers} />);
+
+    // 2. Attempt to save with no name
     fireEvent.click(getByText("Save"));
 
-    /* 1. validation is shown */
+    // 3. Check for error message and no onSave call
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
-  
-    /* 2. onSave is not called */
     expect(onSave).not.toHaveBeenCalled();
   });
   
   it("can successfully save after trying to submit an empty student name", () => {
+    // 1. Render the Form
     const onSave = jest.fn();
     const { getByText, getByPlaceholderText, queryByText } = render(
       <Form interviewers={interviewers} onSave={onSave} />
     );
   
+    // 2. Attempt to save with no name
     fireEvent.click(getByText("Save"));
   
+    // 3. Check for error message and no onSave call
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
   
+    // 4. Enter name and save again
     fireEvent.change(getByPlaceholderText("Enter Student Name"), {
       target: { value: "Lydia Miller-Jones" }
     });
-  
     fireEvent.click(getByText("Save"));
   
+    // 5. Check error message is gone and onSave has been called once with the entered name
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
-  
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
   });
 
   it("calls onCancel and resets the input field", () => {
+    // 1. Render the Form
     const onCancel = jest.fn();
-    const { getByText, getByPlaceholderText, queryByText } = render(
+    const { getByText, getByPlaceholderText, queryByText, debug } = render(
       <Form
         interviewers={interviewers}
         name="Lydia Mill-Jones"
@@ -72,18 +77,20 @@ describe('Form', () => {
       />
     );
   
+    // 2. Click save button
     fireEvent.click(getByText("Save"));
   
+    // 3. Edit the name
     fireEvent.change(getByPlaceholderText("Enter Student Name"), {
       target: { value: "Lydia Miller-Jones" }
     });
   
+    // 4. Click cancel button
     fireEvent.click(getByText("Cancel"));
   
+    // 5. Check error message is not there, student name field is empty and onCancel has been called once
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
-  
     expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
-  
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
   

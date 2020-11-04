@@ -1,4 +1,6 @@
 export default function reducer(state, action) {
+
+  // Creates reducers to change currently visible day, appointment data, or all local data
   const reducers = {
     day(state, {day}) {
       return {...state, day}

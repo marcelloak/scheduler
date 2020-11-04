@@ -24,6 +24,7 @@ const ERROR_DELETE = "ERROR_DELETE";
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY)
 
+  // Saves an appointment
   const save = function(name, interviewer) {
     const interview = {
       student: name,
@@ -36,6 +37,7 @@ export default function Appointment(props) {
       .catch(() => transition(ERROR_SAVE, true))
   }
 
+  // Cancels an appointment
   const destroy = function() {
     transition(DELETING, true)
     props.cancelInterview(props.id)
@@ -43,6 +45,7 @@ export default function Appointment(props) {
       .catch(() => transition(ERROR_DELETE, true))
   }
 
+  // Transitions appoinment mode if added or deleted by another user
   useEffect(() => {
     if (mode === EMPTY && props.interview) transition(SHOW);
     if (mode === SHOW && props.interview === null) transition(EMPTY);

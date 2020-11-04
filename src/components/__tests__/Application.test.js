@@ -18,32 +18,45 @@ describe('Application', () => {
   });
 
   it("loads data, books an interview and reduces the spots remaining for the first day by 1", async () => {
+    // 1. Render the Application and start the WebSocket.
     const server = new WS("ws://localhost:8001");
     const { container } = render(<Application />);
 
+    // 2. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
+    // 3. Click the "Add" button on the first empty appointment.
     const appointment = getAllByTestId(container, 'appointment')[0];
     fireEvent.click(getByAltText(appointment, 'Add'));
+
+    // 4. Add an entered name and interviewer
     fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
       target: { value: "Lydia Miller-Jones" }
     });
     fireEvent.click(getByAltText(appointment, 'Sylvia Palmer'));
+
+    // 5. Click the "Save" button on that same appointment.
     fireEvent.click(getByText(appointment, 'Save'));
+
+    // 6. Check that the element with the text "Saving" is displayed.
     expect(getByText(appointment, 'Saving')).toBeInTheDocument();
     
+    // 7. Wait until the element with the text "Saving" button is not displayed.
     await waitForElementToBeRemoved(() => getByText(container, 'Saving'));
+
+    // 8. Update the local data by faking a websocket message from the server
     server.send(`{"type":"SET_INTERVIEW","id":1,"interview":{"student":"Lydia Miller-Jones","interviewer":1}}`);
     expect(getByText(container, 'Lydia Miller-Jones', {exact: false})).toBeInTheDocument();
 
+    // 9. Check that the DayListItem with the text "Monday" also has the text "no spots remaining".
     const day = getAllByTestId(container, 'day').find(day => queryByText(day, "Monday"));
     expect(getByText(day, 'no spots remaining')).toBeInTheDocument();
     server.close();
   });
 
   it("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
+    // 1. Render the Application and start the WebSocket.
     const server = new WS("ws://localhost:8001");
-    // 1. Render the Application.
     const { container } = render(<Application />);
   
     // 2. Wait until the text "Archie Cohen" is displayed.
@@ -74,8 +87,8 @@ describe('Application', () => {
   });
 
   it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
+    // 1. Render the Application and start the WebSocket.
     const server = new WS("ws://localhost:8001");
-    // 1. Render the Application.
     const { container } = render(<Application />);
   
     // 2. Wait until the text "Archie Cohen" is displayed.
@@ -111,9 +124,8 @@ describe('Application', () => {
   });
 
   it("shows the save error when failing to save an appointment", async () => {
+    // 1. Render the Application and setup rejection of axios put request.
     axios.put.mockRejectedValueOnce();
-
-    // 1. Render the Application.
     const { container } = render(<Application />);
   
     // 2. Wait until the text "Archie Cohen" is displayed.
@@ -149,9 +161,8 @@ describe('Application', () => {
   });
 
   it("shows the delete error when failing to delete an appointment", async () => {
+    // 1. Render the Application and setup rejection of axios delete request.
     axios.delete.mockRejectedValueOnce();
-
-    // 1. Render the Application.
     const { container } = render(<Application />);
   
     // 2. Wait until the text "Archie Cohen" is displayed.

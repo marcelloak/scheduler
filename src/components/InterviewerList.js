@@ -6,6 +6,11 @@ import InterviewerListItem from './InterviewerListItem'
 import 'components/InterviewerList.scss'
 
 export default function InterviewerList(props) {
+  // Require prop interviewer list to be an array
+  InterviewerList.propTypes = {
+    interviewers: propTypes.array.isRequired
+  };
+
   const interviewers = props.interviewers.map((interviewer) => {
     return <InterviewerListItem 
       key={interviewer.id}
@@ -15,11 +20,6 @@ export default function InterviewerList(props) {
       onChange={() => props.onChange(interviewer.id)}  
     />
   });
-
-  InterviewerList.propTypes = {
-    interviewers: propTypes.array.isRequired
-  };
-
   return (
     <section className='interviewers'>
       <h4 className='interviewers__header text--light'>Interviewer</h4>

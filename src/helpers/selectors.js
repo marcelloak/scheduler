@@ -1,3 +1,4 @@
+// Returns the appointments from the given state that belong to the given day
 export function getAppointmentsForDay(state, day) {
   const appointments = [];
 
@@ -12,6 +13,7 @@ export function getAppointmentsForDay(state, day) {
   return appointments;
 }
 
+// Returns the interviewers from the given state that belong to the given day
 export function getInterviewersForDay(state, day) {
   const interviewers = [];
 
@@ -26,6 +28,7 @@ export function getInterviewersForDay(state, day) {
   return interviewers;
 }
 
+// Returns the appointments from the given state that has the given id
 export function getInterview(state, interview) {
   if (!interview) return null;
 

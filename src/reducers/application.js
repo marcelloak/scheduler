@@ -19,14 +19,13 @@ export default function reducer(state, action) {
       }; 
   
       const days = [...state.days];
-
-      let spots = 0;
-      if (state.appointments[id].interview && !interview) spots = 1;
-      if (!state.appointments[id].interview && interview) spots = -1;
   
       for (let i = 0; i < days.length; i++) {
         if (days[i].appointments.includes(id)) {
-          days[i] = {...days[i], spots: days[i].spots + spots}
+          let spots = days[i].spots;
+          if (state.appointments[id].interview && !interview) spots++;
+          if (!state.appointments[id].interview && interview) spots--;
+          days[i] = {...days[i], spots}
         }
       }
       return {...state, appointments, days};

@@ -7,8 +7,8 @@ export default function useVisualMode(initialMode) {
   // Transitions to given mode, adding to the history or replacing the last mode based on given replace boolean
   const transition = function(mode, replace = false) {
     setHistory(prev => {
-      if (replace) prev.pop();
-      return [...prev, mode]
+      const history = replace ? prev.slice(0, -1) : [...prev];
+      return [...history, mode]
     });
     setMode(mode);
   };
@@ -16,8 +16,11 @@ export default function useVisualMode(initialMode) {
   // Transitions to previous mode in history
   const back = function() {
     if (history.length < 2) return;
-    history.pop();
-    setMode(history[history.length - 1]);
+    setHistory(prev => {
+      const history = prev.slice(0, -1);
+      setMode(history[history.length - 1]);
+      return history;
+    });
   };
 
   return { mode, transition, back };

@@ -58,5 +58,5 @@
       "!src/index.js"
     ]
   },
-  "proxy": "http://scheduler-lhl-mk.herokuapp.com/"
+  "proxy": "http://localhost:8001/"
 }

@@ -53,6 +53,7 @@ export default function useApplicationData() {
       const [days, appointments, interviewers] = all.map((result) => result.data);
       dispatch({type: 'application', days, appointments, interviewers});
     })
+    .catch(err => console.log('Unable to fetch data from server: ', err))
   }, []);
 
   return { state, setDay, bookInterview, cancelInterview };
